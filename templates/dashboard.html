@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}LegisRisk Dashboard{% endblock %}
+
+{% block content %}
+<div class="shell">
+  <header class="navbar">
+    <a class="brand" href="{{ url_for('dashboard.dashboard') }}">
+      <span class="brand-mark">LR</span>
+      <span>LegisRisk</span>
+    </a>
+
+    <form id="tickerForm" class="ticker-form" method="get" action="{{ url_for('dashboard.dashboard') }}">
+      <label for="tickers">Portfolio tickers</label>
+      <input id="tickers" name="tickers" value="{{ ticker_input }}" placeholder="AAPL, JPM, LLY" list="knownTickers">
+      <datalist id="knownTickers">
+        {% for ticker in analysis.known_tickers %}
+          <option value="{{ ticker }}"></option>
+        {% endfor %}
+      </datalist>
+      <button type="submit">Analyze</button>
+    </form>
+  </header>
+
+  <section id="heroCard" class="hero-card {{ analysis.portfolio_label|lower }}">
+    <div>
+      <p class="eyebrow">Portfolio signal</p>
+      <h1 id="heroSummary">{{ analysis.hero_summary }}</h1>
+    </div>
+    <div class="score-orb">
+      <span id="portfolioScoreOrb">{{ analysis.portfolio_score }}</span>
+      <small>Risk Score</small>
+    </div>
+  </section>
+
+  <section class="summary-grid">
+    <article class="metric-card">
+      <p>Portfolio Risk Score</p>
+      <strong id="portfolioScore">{{ analysis.portfolio_score }}</strong>
+      <span id="portfolioLabel" class="pill {{ analysis.portfolio_label|lower }}">{{ analysis.portfolio_label }}</span>
+    </article>
+    <article class="metric-card">
+      <p>Highest Risk Stock</p>
+      <strong id="highestRiskStock">{{ analysis.highest_risk_stock.ticker if analysis.highest_risk_stock else "N/A" }}</strong>
+      <span id="highestRiskSector">{{ analysis.highest_risk_stock.sector if analysis.highest_risk_stock else "No sector" }}</span>
+    </article>
+    <article class="metric-card">
+      <p>Most Exposed Sector</p>
+      <strong id="mostExposedSector">{{ analysis.most_exposed_sector }}</strong>
+      <span id="topDriver">{{ analysis.top_driver }}</span>
+    </article>
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="panel wide">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Top stock risk</p>
+          <h2>Stocks Most at Risk Right Now</h2>
+        </div>
+        <span class="muted">Click a bar for details</span>
+      </div>
+      <div class="chart-box">
+        <canvas id="stockRiskChart"></canvas>
+      </div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Sector mix</p>
+          <h2>Sector Exposure</h2>
+        </div>
+      </div>
+      <div class="donut-box">
+        <canvas id="sectorChart"></canvas>
+      </div>
+      <div id="sectorLegend" class="legend"></div>
+    </article>
+  </section>
+
+  <section class="dashboard-grid lower">
+    <article class="panel drilldown-panel">
+      <div class="panel-head">
+        <div>
+          <p class="eyebrow">Stock drilldown</p>
+          <h2 id="selectedStockTitle">Stock Details</h2>
+        </div>
+      </div>
+
+      <div class="stock-summary">
+        <div>
+          <span id="selectedScore">0</span>
+          <small>Risk score</small>
+        </div>
+        <div>
+          <span id="selectedBills">0</span>
+          <small>Affecting bills</small>
+        </div>
+        <div>
+          <span id="selectedSector">N/A</span>
+          <small>Sector</small>
+        </div>
+        <div>
+          <span id="selectedIndustry">N/A</span>
+          <small>Industry</small>
+        </div>
+      </div>
+
+      <div class="why-stock">
+        <h3>Why This Exact Stock?</h3>
+        <p id="whyThisStock">Select a stock to see why its business model matches the current bill risk.</p>
+        <div id="stockThemes" class="bill-meta"></div>
+      </div>
+
+      <div class="breakdown">
+        <h3>Risk Breakdown</h3>
+        <div id="breakdownBars"></div>
+      </div>
+
+      <div class="bill-section">
+        <h3>Riskiest Bills</h3>
+        <div id="billCards" class="bill-cards"></div>
+      </div>
+    </article>
+
+    <aside class="side-stack">
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Actions</p>
+            <h2>Insights</h2>
+          </div>
+        </div>
+        <div id="insightsList" class="insights">
+          {% for insight in analysis.insights %}
+            <div class="insight {{ insight.level }}">
+              <strong>{{ insight.title }}</strong>
+              <p>{{ insight.body }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Activity</p>
+            <h2>Recent Legislative Activity</h2>
+          </div>
+        </div>
+        <ul id="activityFeed" class="activity-feed">
+          {% for item in analysis.activity_feed %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Notebook backend</p>
+            <h2>Dataset Analytics</h2>
+          </div>
+        </div>
+        <div id="backendAnalytics" class="analytics-summary">
+          <div><strong>{{ analysis.backend_analytics.bill_count }}</strong><span>Bills loaded</span></div>
+          <div><strong>{{ analysis.backend_analytics.classified_count }}</strong><span>Classified bills</span></div>
+          <div><strong>{{ analysis.backend_analytics.risk_mean }}</strong><span>Avg bill risk</span></div>
+          <div><strong>{{ analysis.backend_analytics.risk_max }}</strong><span>Max bill risk</span></div>
+        </div>
+        <div id="componentAverages" class="component-list">
+          {% for label, value in analysis.backend_analytics.component_averages.items() %}
+            <div class="legend-item"><span>{{ label }}</span><span>{{ value }}</span></div>
+          {% endfor %}
+        </div>
+      </article>
+    </aside>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+<script id="initialLegisRiskData" type="application/json">{{ analysis|tojson }}</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

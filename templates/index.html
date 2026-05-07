@@ -1,0 +1,184 @@
+{% extends "base.html" %} {% block title %}LegisRisk - Protect Your Portfolio{%
+endblock %} {% block content %}
+<div class="home-container">
+  <header class="home-navbar">
+    <a class="brand" href="{{ url_for('home.index') }}">
+      <span class="brand-mark">LR</span>
+      <span>LegisRisk</span>
+    </a>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Welcome to LegisRisk</h1>
+      <p class="subtitle">
+        Understand How Legislative Risk Affects Your Portfolio
+      </p>
+
+      <div class="project-overview">
+        <h2>About LegisRisk</h2>
+        <p>
+          LegisRisk is an AI-powered platform that analyzes legislative risk to
+          your investment portfolio. Our system monitors current and proposed
+          bills in Congress and evaluates how they could impact your stocks and
+          sectors.
+        </p>
+
+        <div class="features">
+          <div class="feature-card">
+            <h3>Real-Time Analysis</h3>
+            <p>
+              Get instant risk assessments for your stock portfolio based on
+              current legislative activity
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>AI Classification</h3>
+            <p>
+              Our machine learning models classify bills and match them to
+              companies and sectors
+            </p>
+          </div>
+          <div class="feature-card">
+            <h3>Smart Insights</h3>
+            <p>
+              Receive actionable insights about legislative threats to your
+              investments
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <a href="{{ url_for('dashboard.dashboard') }}" class="cta-button">
+        Protect Your Portfolio
+      </a>
+    </div>
+  </section>
+</div>
+
+<style>
+  .home-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .home-navbar {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    background: white;
+    color: #667eea;
+    font-weight: 800;
+  }
+
+  .hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 3rem 2rem;
+  }
+
+  .hero-content {
+    max-width: 800px;
+    text-align: center;
+    color: white;
+  }
+
+  .hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+  }
+
+  .subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 3rem;
+    opacity: 0.95;
+  }
+
+  .project-overview {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .project-overview h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .project-overview p {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    opacity: 0.95;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .feature-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-card p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: #667eea;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  }
+</style>
+{% endblock %}

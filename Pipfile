@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pandas = ">=2.2"
+pyarrow = ">=15.0"
+flask = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.14"

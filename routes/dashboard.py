@@ -4,7 +4,7 @@ from services.insights import generate_insights
 from services.risk_engine import analyze_portfolio, parse_tickers
 
 
-dashboard_bp = Blueprint("dashboard", __name__)
+dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
 
 
 @dashboard_bp.route("/", methods=["GET"])

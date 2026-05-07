@@ -1,4 +1,6 @@
-let appData = JSON.parse(document.getElementById("initialLegisRiskData").textContent);
+let appData = JSON.parse(
+  document.getElementById("initialLegisRiskData").textContent,
+);
 let stockRiskChart;
 let sectorChart;
 
@@ -116,7 +118,9 @@ function renderSectorChart() {
       datasets: [
         {
           data: sectors.map((item) => item.percentage),
-          backgroundColor: sectors.map((_, index) => sectorColors[index % sectorColors.length]),
+          backgroundColor: sectors.map(
+            (_, index) => sectorColors[index % sectorColors.length],
+          ),
           borderColor: "#ffffff",
           borderWidth: 4,
         },
@@ -144,18 +148,21 @@ function renderSectorChart() {
           <span><i class="swatch" style="background:${sectorColors[index % sectorColors.length]}"></i>${escapeHtml(item.sector)}</span>
           <span>${item.percentage}%</span>
         </div>
-      `
+      `,
     )
     .join("");
 }
 
 function renderStockDrilldown(stock) {
-  document.getElementById("selectedStockTitle").textContent = `${stock.ticker} Risk Profile`;
+  document.getElementById("selectedStockTitle").textContent =
+    `${stock.ticker} Risk Profile`;
   document.getElementById("selectedScore").textContent = stock.risk_score;
   document.getElementById("selectedBills").textContent = stock.affecting_bills;
   document.getElementById("selectedSector").textContent = stock.sector;
-  document.getElementById("selectedIndustry").textContent = stock.industry || "Unknown";
-  document.getElementById("whyThisStock").textContent = stock.why_this_stock || "No stock-specific explanation available.";
+  document.getElementById("selectedIndustry").textContent =
+    stock.industry || "Unknown";
+  document.getElementById("whyThisStock").textContent =
+    stock.why_this_stock || "No stock-specific explanation available.";
   document.getElementById("stockThemes").innerHTML = [
     ...(stock.business_lines || []).map((item) => `Business: ${item}`),
     ...(stock.policy_themes || []).map((item) => `Theme: ${item}`),
@@ -164,7 +171,9 @@ function renderStockDrilldown(stock) {
     .map((item) => `<span class="meta-chip">${escapeHtml(item)}</span>`)
     .join("");
 
-  document.getElementById("breakdownBars").innerHTML = Object.entries(stock.breakdown)
+  document.getElementById("breakdownBars").innerHTML = Object.entries(
+    stock.breakdown,
+  )
     .map(
       ([label, value]) => `
         <div class="breakdown-row">
@@ -172,7 +181,7 @@ function renderStockDrilldown(stock) {
           <div class="bar-track"><div class="bar-fill" style="width:${value}%"></div></div>
           <strong>${value}%</strong>
         </div>
-      `
+      `,
     )
     .join("");
 
@@ -191,11 +200,17 @@ function renderBillCard(bill) {
     .join("");
   const sponsors = (bill.sponsors || [])
     .slice(0, 3)
-    .map((sponsor) => `${escapeHtml(sponsor.full_name)} (${escapeHtml(sponsor.party || "")}-${escapeHtml(sponsor.state || "")})`)
+    .map(
+      (sponsor) =>
+        `${escapeHtml(sponsor.full_name)} (${escapeHtml(sponsor.party || "")}-${escapeHtml(sponsor.state || "")})`,
+    )
     .join(", ");
   const actions = (bill.actions || [])
     .slice(0, 4)
-    .map((action) => `<li>${escapeHtml(action.action_date || "")}: ${escapeHtml(action.action_text || "")}</li>`)
+    .map(
+      (action) =>
+        `<li>${escapeHtml(action.action_date || "")}: ${escapeHtml(action.action_text || "")}</li>`,
+    )
     .join("");
   const reasons = (bill.match_reasons || [])
     .map((reason) => `<span class="meta-chip">${escapeHtml(reason)}</span>`)
@@ -239,7 +254,7 @@ function renderInsights() {
           <strong>${escapeHtml(insight.title)}</strong>
           <p>${escapeHtml(insight.body)}</p>
         </div>
-      `
+      `,
     )
     .join("");
 }
@@ -258,15 +273,22 @@ function renderBackendAnalytics() {
     <div><strong>${analytics.risk_mean}</strong><span>Avg bill risk</span></div>
     <div><strong>${analytics.risk_max}</strong><span>Max bill risk</span></div>
   `;
-  document.getElementById("componentAverages").innerHTML = Object.entries(analytics.component_averages)
-    .map(([label, value]) => `<div class="legend-item"><span>${escapeHtml(label)}</span><span>${value}</span></div>`)
+  document.getElementById("componentAverages").innerHTML = Object.entries(
+    analytics.component_averages,
+  )
+    .map(
+      ([label, value]) =>
+        `<div class="legend-item"><span>${escapeHtml(label)}</span><span>${value}</span></div>`,
+    )
     .join("");
 }
 
 function renderSummary() {
   document.getElementById("heroSummary").textContent = appData.hero_summary;
-  document.getElementById("portfolioScoreOrb").textContent = appData.portfolio_score;
-  document.getElementById("portfolioScore").textContent = appData.portfolio_score;
+  document.getElementById("portfolioScoreOrb").textContent =
+    appData.portfolio_score;
+  document.getElementById("portfolioScore").textContent =
+    appData.portfolio_score;
 
   const hero = document.getElementById("heroCard");
   hero.classList.remove("low", "moderate", "high");
@@ -277,9 +299,14 @@ function renderSummary() {
   label.className = `pill ${appData.portfolio_label.toLowerCase()}`;
 
   const highest = appData.highest_risk_stock;
-  document.getElementById("highestRiskStock").textContent = highest ? highest.ticker : "N/A";
-  document.getElementById("highestRiskSector").textContent = highest ? highest.sector : "No sector";
-  document.getElementById("mostExposedSector").textContent = appData.most_exposed_sector;
+  document.getElementById("highestRiskStock").textContent = highest
+    ? highest.ticker
+    : "N/A";
+  document.getElementById("highestRiskSector").textContent = highest
+    ? highest.sector
+    : "No sector";
+  document.getElementById("mostExposedSector").textContent =
+    appData.most_exposed_sector;
   document.getElementById("topDriver").textContent = appData.top_driver;
 }
 
@@ -302,11 +329,17 @@ async function analyzePortfolio(event) {
   button.textContent = "Analyzing";
 
   try {
-    const response = await fetch(`/api/analyze?tickers=${encodeURIComponent(input.value)}`);
+    const response = await fetch(
+      `/dashboard/api/analyze?tickers=${encodeURIComponent(input.value)}`,
+    );
     if (!response.ok) throw new Error(`Analysis failed: ${response.status}`);
     appData = await response.json();
     input.value = appData.tickers.join(", ");
-    history.replaceState(null, "", `/?tickers=${encodeURIComponent(input.value)}`);
+    history.replaceState(
+      null,
+      "",
+      `/dashboard?tickers=${encodeURIComponent(input.value)}`,
+    );
     renderDashboard();
   } finally {
     button.disabled = false;
@@ -316,5 +349,7 @@ async function analyzePortfolio(event) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
-  document.getElementById("tickerForm").addEventListener("submit", analyzePortfolio);
+  document
+    .getElementById("tickerForm")
+    .addEventListener("submit", analyzePortfolio);
 });

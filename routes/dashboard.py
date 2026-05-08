@@ -1,8 +1,9 @@
 from flask import Blueprint, current_app, jsonify, render_template
 from flask_login import login_required, current_user
 
+from services.api_adapter import analyze_portfolio_via_api
 from services.insights import generate_insights
-from services.risk_engine import analyze_portfolio, parse_tickers
+from services.risk_engine import parse_tickers
 from models import Portfolio
 
 dashboard_bp = Blueprint("dashboard", __name__, url_prefix="/dashboard")
@@ -19,7 +20,7 @@ def dashboard():
         tickers_list = parse_tickers(current_app.config["DEFAULT_TICKERS"])
 
     try:
-        analysis = analyze_portfolio(tickers_list)
+        analysis = analyze_portfolio_via_api(tickers_list)
         analysis["insights"] = generate_insights(analysis)
     except Exception:
         current_app.logger.exception("Dashboard analysis failed")
@@ -64,6 +65,6 @@ def analyze_api():
     tickers_list = portfolio.get_tickers_list() if portfolio else []
     tickers_list = tickers_list or parse_tickers(current_app.config["DEFAULT_TICKERS"])
 
-    analysis = analyze_portfolio(tickers_list)
+    analysis = analyze_portfolio_via_api(tickers_list)
     analysis["insights"] = generate_insights(analysis)
     return jsonify(analysis)

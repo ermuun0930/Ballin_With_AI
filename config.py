@@ -11,6 +11,14 @@ ANALYTICS_DATABASE_PATH = Path(os.environ.get("ANALYTICS_DATABASE_PATH", DEFAULT
 DEFAULT_TICKERS = "AAPL, JPM, LLY"
 SECRET_KEY = "legisrisk-dev-secret-key-2026"
 
+# LegisRisk AWS API
+RISK_API_URL = os.environ.get(
+    "RISK_API_URL",
+    "https://o13e3w95bk.execute-api.us-east-1.amazonaws.com/Prod/risk",
+)
+RISK_API_TIMEOUT = int(os.environ.get("RISK_API_TIMEOUT", "90"))
+RISK_API_ANALYZE_IMPACT = os.environ.get("RISK_API_ANALYZE_IMPACT", "true").lower() == "true"
+
 # Application database
 APP_DATABASE_PATH = Path(os.environ.get("APP_DATABASE_PATH", ANALYTICS_DATABASE_PATH))
 SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")

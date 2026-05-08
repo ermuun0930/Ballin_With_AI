@@ -36,7 +36,10 @@ def create_app() -> Flask:
 
     # Create database tables
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception:
+            app.logger.exception('Failed to initialize database schema')
 
     return app
 

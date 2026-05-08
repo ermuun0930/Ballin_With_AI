@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
@@ -43,8 +43,12 @@ def login():
         user = User.query.filter_by(email=form.email.data.strip().lower()).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember.data)
-            user.last_login = db.func.now()
-            db.session.commit()
+            try:
+                user.last_login = db.func.now()
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                current_app.logger.exception('Failed to update last_login for user %s', user.email)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('portfolio.manage'))
         else:
@@ -65,13 +69,19 @@ def register():
         )
         user.set_password(form.password.data)
 
-        db.session.add(user)
-        db.session.flush()
+        try:
+            db.session.add(user)
+            db.session.flush()
 
-        # Create default portfolio for new user
-        portfolio = Portfolio(user_id=user.id, name='My Portfolio')
-        db.session.add(portfolio)
-        db.session.commit()
+            # Create default portfolio for new user
+            portfolio = Portfolio(user_id=user.id, name='My Portfolio')
+            db.session.add(portfolio)
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+            current_app.logger.exception('Failed to register new user %s', form.email.data)
+            flash('Unable to create your account at this time. Please try again later.', 'error')
+            return render_template('auth/register.html', title='Sign Up', form=form)
 
         flash('Account created successfully! You can now log in.', 'success')
         return redirect(url_for('auth.login'))

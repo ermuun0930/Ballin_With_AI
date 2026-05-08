@@ -154,6 +154,12 @@ function renderSectorChart() {
 }
 
 function renderStockDrilldown(stock) {
+  // Update dropdown selection
+  const stockSelect = document.getElementById("stockSelect");
+  if (stockSelect) {
+    stockSelect.value = stock.ticker;
+  }
+
   document.getElementById("selectedStockTitle").textContent =
     `${stock.ticker} Risk Profile`;
   document.getElementById("selectedScore").textContent = stock.risk_score;
@@ -317,39 +323,23 @@ function renderDashboard() {
   renderInsights();
   renderActivity();
   renderBackendAnalytics();
-  if (appData.stocks.length) renderStockDrilldown(appData.stocks[0]);
+  if (appData.stocks.length) {
+    renderStockDrilldown(appData.stocks[0]);
+    // Set initial dropdown value
+    const stockSelect = document.getElementById("stockSelect");
+    if (stockSelect) {
+      stockSelect.value = appData.stocks[0].ticker;
+    }
+  }
 }
 
-async function analyzePortfolio(event) {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const button = form.querySelector("button");
-  const input = document.getElementById("tickers");
-  button.disabled = true;
-  button.textContent = "Analyzing";
-
-  try {
-    const response = await fetch(
-      `/dashboard/api/analyze?tickers=${encodeURIComponent(input.value)}`,
-    );
-    if (!response.ok) throw new Error(`Analysis failed: ${response.status}`);
-    appData = await response.json();
-    input.value = appData.tickers.join(", ");
-    history.replaceState(
-      null,
-      "",
-      `/dashboard?tickers=${encodeURIComponent(input.value)}`,
-    );
-    renderDashboard();
-  } finally {
-    button.disabled = false;
-    button.textContent = "Analyze";
+function selectStock(ticker) {
+  const selectedStock = appData.stocks.find((stock) => stock.ticker === ticker);
+  if (selectedStock) {
+    renderStockDrilldown(selectedStock);
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDashboard();
-  document
-    .getElementById("tickerForm")
-    .addEventListener("submit", analyzePortfolio);
 });

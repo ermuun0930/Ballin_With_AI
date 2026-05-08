@@ -377,7 +377,7 @@ def analyze_portfolio(tickers: list[str]) -> dict[str, Any]:
         "highest_risk_stock": highest_risk_stock,
         "most_exposed_sector": most_exposed_sector,
         "sector_exposure": sector_exposure(sector_counts, len(stock_results)),
-        "stocks": stock_results[:5],
+        "stocks": stock_results,
         "all_stocks": stock_results,
         "activity_feed": recent_activity(bills, stock_results),
         "top_driver": top_driver,

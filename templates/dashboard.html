@@ -6,28 +6,16 @@ block content %}
       <span class="brand-mark">LR</span>
       <span>LegisRisk</span>
     </a>
-
-    <form
-      id="tickerForm"
-      class="ticker-form"
-      method="get"
-      action="{{ url_for('dashboard.dashboard') }}"
-    >
-      <label for="tickers">Portfolio tickers</label>
-      <input
-        id="tickers"
-        name="tickers"
-        value="{{ ticker_input }}"
-        placeholder="AAPL, JPM, LLY"
-        list="knownTickers"
-      />
-      <datalist id="knownTickers">
-        {% for ticker in analysis.known_tickers %}
-        <option value="{{ ticker }}"></option>
-        {% endfor %}
-      </datalist>
-      <button type="submit">Analyze</button>
-    </form>
+    <nav class="nav-links">
+      {% if current_user.is_authenticated %}
+      <span class="nav-user">Welcome, {{ current_user.username }}</span>
+      <a href="{{ url_for('portfolio.manage') }}" class="nav-link">Portfolio</a>
+      <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link active"
+        >Dashboard</a
+      >
+      <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+      {% endif %}
+    </nav>
   </header>
 
   <section id="heroCard" class="hero-card {{ analysis.portfolio_label|lower }}">
@@ -73,8 +61,8 @@ block content %}
     <article class="panel wide">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Top stock risk</p>
-          <h2>Stocks Most at Risk Right Now</h2>
+          <p class="eyebrow">Stock risk overview</p>
+          <h2>All Portfolio Stocks</h2>
         </div>
         <span class="muted">Click a bar for details</span>
       </div>
@@ -103,6 +91,16 @@ block content %}
         <div>
           <p class="eyebrow">Stock drilldown</p>
           <h2 id="selectedStockTitle">Stock Details</h2>
+        </div>
+        <div class="stock-selector">
+          <label for="stockSelect">Select Stock:</label>
+          <select id="stockSelect" onchange="selectStock(this.value)">
+            {% for stock in analysis.stocks %}
+            <option value="{{ stock.ticker }}">
+              {{ stock.ticker }} - {{ stock.company_name }}
+            </option>
+            {% endfor %}
+          </select>
         </div>
       </div>
 

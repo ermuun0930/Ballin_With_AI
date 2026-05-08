@@ -6,6 +6,19 @@ endblock %} {% block content %}
       <span class="brand-mark">LR</span>
       <span>LegisRisk</span>
     </a>
+    <nav class="nav-links">
+      {% if current_user.is_authenticated %}
+      <span class="nav-user">Welcome, {{ current_user.username }}</span>
+      <a href="{{ url_for('portfolio.manage') }}" class="nav-link">Portfolio</a>
+      <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link"
+        >Dashboard</a
+      >
+      <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+      {% else %}
+      <a href="{{ url_for('auth.login') }}" class="nav-link">Sign In</a>
+      <a href="{{ url_for('auth.register') }}" class="nav-link">Sign Up</a>
+      {% endif %}
+    </nav>
   </header>
 
   <section class="hero-section">
@@ -65,6 +78,7 @@ endblock %} {% block content %}
   .home-navbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 1rem 2rem;
     background: rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
@@ -90,6 +104,34 @@ endblock %} {% block content %}
     background: white;
     color: #667eea;
     font-weight: 800;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+
+  .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .nav-user {
+    color: white;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    margin-right: 1rem;
   }
 
   .hero-section {

@@ -1,0 +1,232 @@
+{% extends "base.html" %} {% block title %}Sign In - LegisRisk{% endblock %} {%
+block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <a class="brand" href="{{ url_for('home.index') }}">
+        <span class="brand-mark">LR</span>
+        <span>LegisRisk</span>
+      </a>
+      <h1>Sign In</h1>
+      <p>Welcome back! Please sign in to your account.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %}
+    <div
+      class="alert alert-{{ 'danger' if category == 'error' else 'success' if category == 'success' else 'info' }}"
+    >
+      {{ message }}
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+
+    <form method="POST" class="auth-form">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.email.label }} {{ form.email(class="form-control") }} {% if
+        form.email.errors %} {% for error in form.email.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.password.label }} {{ form.password(class="form-control") }} {%
+        if form.password.errors %} {% for error in form.password.errors %}
+        <span class="error">{{ error }}</span>
+        {% endfor %} {% endif %}
+      </div>
+
+      <div class="form-group checkbox-group">
+        {{ form.remember() }} {{ form.remember.label }}
+      </div>
+
+      <div class="form-actions">
+        {{ form.submit(class="btn btn-primary btn-full") }}
+      </div>
+    </form>
+
+    <div class="auth-links">
+      <p>
+        Don't have an account?
+        <a href="{{ url_for('auth.register') }}">Sign up</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+  }
+
+  .auth-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 8px;
+    background: #667eea;
+    color: white;
+    font-weight: 800;
+  }
+
+  .auth-header h1 {
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-header p {
+    color: #64748b;
+    margin: 0;
+  }
+
+  .alert {
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .alert-danger {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+  }
+
+  .alert-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+  }
+
+  .alert-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+  }
+
+  .auth-form {
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+  }
+
+  .error {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: #667eea;
+    color: white;
+    width: 100%;
+  }
+
+  .btn-primary:hover {
+    background: #5a67d8;
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+
+  .auth-links {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .auth-links a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .auth-links a:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}

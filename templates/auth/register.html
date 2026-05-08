@@ -7,8 +7,8 @@ block content %}
         <span class="brand-mark">LR</span>
         <span>LegisRisk</span>
       </a>
-      <h1>Sign Up</h1>
-      <p>Create your account to start analyzing legislative risk.</p>
+      <h1>Create account</h1>
+      <p>Save a portfolio and monitor its legislative exposure.</p>
     </div>
 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
@@ -23,21 +23,21 @@ block content %}
     <form method="POST" class="auth-form">
       {{ form.hidden_tag() }}
       <div class="form-group">
-        {{ form.username.label }} {{ form.username(class="form-control") }} {%
+        {{ form.username.label }} {{ form.username(class="form-control", placeholder="Choose a username", autocomplete="username") }} {%
         if form.username.errors %} {% for error in form.username.errors %}
         <span class="error">{{ error }}</span>
         {% endfor %} {% endif %}
       </div>
 
       <div class="form-group">
-        {{ form.email.label }} {{ form.email(class="form-control") }} {% if
+        {{ form.email.label }} {{ form.email(class="form-control", placeholder="you@example.com", autocomplete="email") }} {% if
         form.email.errors %} {% for error in form.email.errors %}
         <span class="error">{{ error }}</span>
         {% endfor %} {% endif %}
       </div>
 
       <div class="form-group">
-        {{ form.password.label }} {{ form.password(class="form-control") }} {%
+        {{ form.password.label }} {{ form.password(class="form-control", placeholder="At least 6 characters", autocomplete="new-password") }} {%
         if form.password.errors %} {% for error in form.password.errors %}
         <span class="error">{{ error }}</span>
         {% endfor %} {% endif %}
@@ -45,7 +45,7 @@ block content %}
 
       <div class="form-group">
         {{ form.confirm_password.label }} {{
-        form.confirm_password(class="form-control") }} {% if
+        form.confirm_password(class="form-control", placeholder="Repeat your password", autocomplete="new-password") }} {% if
         form.confirm_password.errors %} {% for error in
         form.confirm_password.errors %}
         <span class="error">{{ error }}</span>
@@ -59,7 +59,7 @@ block content %}
 
     <div class="auth-links">
       <p>
-        Already have an account?
+        Already tracking a portfolio?
         <a href="{{ url_for('auth.login') }}">Sign in</a>
       </p>
     </div>
@@ -72,15 +72,18 @@ block content %}
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background:
+      linear-gradient(120deg, rgba(241, 245, 249, 0.92), rgba(240, 253, 250, 0.8)),
+      #f8fafc;
     padding: 2rem;
   }
 
   .auth-card {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    padding: 3rem;
+    border: 1px solid #dbe4ef;
+    border-radius: 8px;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+    padding: 2.5rem;
     width: 100%;
     max-width: 400px;
   }
@@ -95,7 +98,7 @@ block content %}
     align-items: center;
     gap: 0.5rem;
     text-decoration: none;
-    color: #1e293b;
+    color: #172033;
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
@@ -108,14 +111,14 @@ block content %}
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 8px;
-    background: #667eea;
+    background: #172033;
     color: white;
     font-weight: 800;
   }
 
   .auth-header h1 {
     font-size: 2rem;
-    color: #1e293b;
+    color: #0f172a;
     margin-bottom: 0.5rem;
   }
 
@@ -126,7 +129,7 @@ block content %}
 
   .alert {
     padding: 1rem;
-    border-radius: 6px;
+    border-radius: 8px;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
   }
@@ -168,15 +171,15 @@ block content %}
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #d1d5db;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.2s;
   }
 
   .form-control:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
   }
 
   .error {
@@ -192,7 +195,7 @@ block content %}
     justify-content: center;
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: 500;
     text-decoration: none;
@@ -201,13 +204,13 @@ block content %}
   }
 
   .btn-primary {
-    background: #667eea;
+    background: #172033;
     color: white;
     width: 100%;
   }
 
   .btn-primary:hover {
-    background: #5a67d8;
+    background: #2563eb;
   }
 
   .btn-full {
@@ -221,13 +224,24 @@ block content %}
   }
 
   .auth-links a {
-    color: #667eea;
+    color: #2563eb;
     text-decoration: none;
     font-weight: 500;
   }
 
   .auth-links a:hover {
     text-decoration: underline;
+  }
+
+  @media (max-width: 520px) {
+    .auth-container {
+      align-items: stretch;
+      padding: 1rem;
+    }
+
+    .auth-card {
+      padding: 1.5rem;
+    }
   }
 </style>
 {% endblock %}

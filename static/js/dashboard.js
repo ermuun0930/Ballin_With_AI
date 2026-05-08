@@ -161,7 +161,7 @@ function renderStockDrilldown(stock) {
   }
 
   document.getElementById("selectedStockTitle").textContent =
-    `${stock.ticker} Risk Profile`;
+    `${stock.ticker} risk profile`;
   document.getElementById("selectedScore").textContent = stock.risk_score;
   document.getElementById("selectedBills").textContent = stock.affecting_bills;
   document.getElementById("selectedSector").textContent = stock.sector;
@@ -235,17 +235,17 @@ function renderBillCard(bill) {
         <span class="meta-chip">Classified: ${escapeHtml(bill.classification.industry)}</span>
         <span class="meta-chip">Confidence: ${escapeHtml(bill.classification.confidence)}</span>
         <span class="meta-chip">Stock relevance: ${escapeHtml(bill.stock_relevance)}%</span>
-        <span class="meta-chip">Base bill risk: ${escapeHtml(bill.base_bill_risk)}</span>
+        <span class="meta-chip">Bill risk: ${escapeHtml(bill.base_bill_risk)}</span>
         ${subjects}
         ${reasons}
       </div>
       <p><strong>Status:</strong> ${escapeHtml(bill.status)}</p>
-      <p><strong>Impact:</strong> ${escapeHtml(bill.impact)}</p>
+      <p><strong>Likely impact:</strong> ${escapeHtml(bill.impact)}</p>
       ${sponsors ? `<p><strong>Sponsors:</strong> ${sponsors}</p>` : ""}
       ${bill.url ? `<a href="${escapeHtml(bill.url)}" target="_blank" rel="noreferrer">Open bill</a>` : ""}
       ${
         actions
-          ? `<details class="bill-actions"><summary>Recent database actions</summary><ul>${actions}</ul></details>`
+          ? `<details class="bill-actions"><summary>Recent bill actions</summary><ul>${actions}</ul></details>`
           : ""
       }
     </article>

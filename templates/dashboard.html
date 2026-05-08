@@ -8,7 +8,7 @@ block content %}
     </a>
     <nav class="nav-links">
       {% if current_user.is_authenticated %}
-      <span class="nav-user">Welcome, {{ current_user.username }}</span>
+      <span class="nav-user">{{ current_user.username }}</span>
       <a href="{{ url_for('portfolio.manage') }}" class="nav-link">Portfolio</a>
       <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link active"
         >Dashboard</a
@@ -20,18 +20,18 @@ block content %}
 
   <section id="heroCard" class="hero-card {{ analysis.portfolio_label|lower }}">
     <div>
-      <p class="eyebrow">Portfolio signal</p>
+      <p class="eyebrow">Portfolio risk signal</p>
       <h1 id="heroSummary">{{ analysis.hero_summary }}</h1>
     </div>
     <div class="score-orb">
       <span id="portfolioScoreOrb">{{ analysis.portfolio_score }}</span>
-      <small>Risk Score</small>
+      <small>Risk score</small>
     </div>
   </section>
 
   <section class="summary-grid">
     <article class="metric-card">
-      <p>Portfolio Risk Score</p>
+      <p>Overall portfolio risk</p>
       <strong id="portfolioScore">{{ analysis.portfolio_score }}</strong>
       <span
         id="portfolioLabel"
@@ -40,7 +40,7 @@ block content %}
       >
     </article>
     <article class="metric-card">
-      <p>Highest Risk Stock</p>
+      <p>Highest-risk stock</p>
       <strong id="highestRiskStock"
         >{{ analysis.highest_risk_stock.ticker if analysis.highest_risk_stock
         else "N/A" }}</strong
@@ -51,7 +51,7 @@ block content %}
       >
     </article>
     <article class="metric-card">
-      <p>Most Exposed Sector</p>
+      <p>Most exposed sector</p>
       <strong id="mostExposedSector">{{ analysis.most_exposed_sector }}</strong>
       <span id="topDriver">{{ analysis.top_driver }}</span>
     </article>
@@ -61,10 +61,10 @@ block content %}
     <article class="panel wide">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Stock risk overview</p>
-          <h2>All Portfolio Stocks</h2>
+          <p class="eyebrow">Risk by holding</p>
+          <h2>Portfolio stocks</h2>
         </div>
-        <span class="muted">Click a bar for details</span>
+        <span class="muted">Select a bar to inspect the driver</span>
       </div>
       <div class="chart-box">
         <canvas id="stockRiskChart"></canvas>
@@ -74,8 +74,8 @@ block content %}
     <article class="panel">
       <div class="panel-head">
         <div>
-          <p class="eyebrow">Sector mix</p>
-          <h2>Sector Exposure</h2>
+          <p class="eyebrow">Exposure mix</p>
+          <h2>Sector allocation</h2>
         </div>
       </div>
       <div class="donut-box">
@@ -90,10 +90,10 @@ block content %}
       <div class="panel-head">
         <div>
           <p class="eyebrow">Stock drilldown</p>
-          <h2 id="selectedStockTitle">Stock Details</h2>
+          <h2 id="selectedStockTitle">Stock details</h2>
         </div>
         <div class="stock-selector">
-          <label for="stockSelect">Select Stock:</label>
+          <label for="stockSelect">Stock</label>
           <select id="stockSelect" onchange="selectStock(this.value)">
             {% for stock in analysis.stocks %}
             <option value="{{ stock.ticker }}">
@@ -124,21 +124,21 @@ block content %}
       </div>
 
       <div class="why-stock">
-        <h3>Why This Exact Stock?</h3>
+        <h3>Why this stock is exposed</h3>
         <p id="whyThisStock">
-          Select a stock to see why its business model matches the current bill
-          risk.
+          Select a stock to see which business lines and policy themes connect
+          it to current bills.
         </p>
         <div id="stockThemes" class="bill-meta"></div>
       </div>
 
       <div class="breakdown">
-        <h3>Risk Breakdown</h3>
+        <h3>Risk components</h3>
         <div id="breakdownBars"></div>
       </div>
 
       <div class="bill-section">
-        <h3>Riskiest Bills</h3>
+        <h3>Bills driving the signal</h3>
         <div id="billCards" class="bill-cards"></div>
       </div>
     </article>
@@ -147,8 +147,8 @@ block content %}
       <article class="panel">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">Actions</p>
-            <h2>Insights</h2>
+            <p class="eyebrow">Interpretation</p>
+            <h2>What to watch</h2>
           </div>
         </div>
         <div id="insightsList" class="insights">
@@ -164,8 +164,8 @@ block content %}
       <article class="panel">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">Activity</p>
-            <h2>Recent Legislative Activity</h2>
+            <p class="eyebrow">Congressional activity</p>
+            <h2>Recent bill movement</h2>
           </div>
         </div>
         <ul id="activityFeed" class="activity-feed">
@@ -178,8 +178,8 @@ block content %}
       <article class="panel">
         <div class="panel-head">
           <div>
-            <p class="eyebrow">Notebook backend</p>
-            <h2>Dataset Analytics</h2>
+            <p class="eyebrow">Data coverage</p>
+            <h2>Model inputs</h2>
           </div>
         </div>
         <div id="backendAnalytics" class="analytics-summary">

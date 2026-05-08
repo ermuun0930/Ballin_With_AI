@@ -49,7 +49,7 @@ def load_bills() -> pd.DataFrame:
 
 @lru_cache(maxsize=1)
 def load_database_context() -> dict[str, Any]:
-    path = current_app.config["DATABASE_PATH"]
+    path = current_app.config.get("ANALYTICS_DATABASE_PATH", current_app.config["DATABASE_PATH"])
     with sqlite3.connect(path) as connection:
         connection.row_factory = sqlite3.Row
         tickers = {

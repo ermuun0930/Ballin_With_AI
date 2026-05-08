@@ -18,8 +18,37 @@ def dashboard():
     if not tickers_list:
         tickers_list = parse_tickers(current_app.config["DEFAULT_TICKERS"])
 
-    analysis = analyze_portfolio(tickers_list)
-    analysis["insights"] = generate_insights(analysis)
+    try:
+        analysis = analyze_portfolio(tickers_list)
+        analysis["insights"] = generate_insights(analysis)
+    except Exception:
+        current_app.logger.exception("Dashboard analysis failed")
+        analysis = {
+            "portfolio_label": "Low",
+            "portfolio_score": 0,
+            "hero_summary": "Unable to load dashboard analysis at this time.",
+            "highest_risk_stock": None,
+            "most_exposed_sector": "N/A",
+            "top_driver": "No active legislative driver",
+            "stocks": [],
+            "all_stocks": [],
+            "activity_feed": ["Dashboard data is unavailable."],
+            "insights": [
+                {
+                    "level": "error",
+                    "title": "Analysis unavailable",
+                    "body": "The dashboard is temporarily unavailable due to a backend data issue.",
+                }
+            ],
+            "backend_analytics": {
+                "bill_count": 0,
+                "classified_count": 0,
+                "risk_mean": 0,
+                "risk_max": 0,
+                "component_averages": {},
+            },
+            "sector_exposure": [],
+        }
 
     return render_template(
         "dashboard.html",
